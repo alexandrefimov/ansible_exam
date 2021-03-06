@@ -1,0 +1,16 @@
+node("jenkins-slave")  {
+    cleanWs()
+    stage('Upload Ansible Repo') {
+        git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
+    }
+    stage('Install Galaxy Roles') {
+        sh 'ansible-galaxy install alexandrefimov.docker_role, alexandrefimov.web_role, alexandrefimov.nginx_role --force'
+    }
+    stage('Install Amazon Plugin') {
+        sh 'ansible-galaxy collection install amazon.aws'
+    }
+    stage('Deploy Calc App') {
+        ansiblePlaybook credentialsId: 'instance_key', inventory: 'aws_ec2.yml', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
+    }
+}
+
