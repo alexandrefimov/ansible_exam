@@ -1,4 +1,7 @@
-[local]
-localhost
+[aws]
+54.171.16.22
+
+#[local]
+#localhost
 
 
