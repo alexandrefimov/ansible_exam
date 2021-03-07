@@ -10,7 +10,11 @@ node("jenkins-slave")  {
         sh 'ansible-galaxy collection install amazon.aws'
     }
     stage('Deploy Calc App') {
-        ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'inventory', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
+        environment {
+            AWS_ACCESS_KEY_ID     = credentials('aws-key-id')
+            AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        }
+        ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
     }
     stage('Integration Test') {
         def test = httpRequest 'http://34.244.40.137'
