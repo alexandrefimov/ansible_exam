@@ -12,5 +12,9 @@ node("jenkins-slave")  {
     stage('Deploy Calc App') {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'inventory', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
     }
+    stage('Integration Test') {
+        def test = httpRequest 'http://34.245.170.95'
+        println("Server status: "+test.status)
+    }
 }
 
