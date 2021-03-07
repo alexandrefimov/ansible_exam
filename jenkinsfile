@@ -13,7 +13,7 @@ node("jenkins-slave")  {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'inventory', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
     }
     stage('Integration Test') {
-        def test = httpRequest 'http://34.245.170.95'
+        def test = httpRequest 'http://34.244.40.137'
         println("Server status: "+test.status)
     }
 }
