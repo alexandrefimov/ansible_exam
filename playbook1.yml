@@ -5,5 +5,5 @@
   become: yes
 
   tasks:
-  -name: pind
-   ping:
+  - name: pind
+    ping:
