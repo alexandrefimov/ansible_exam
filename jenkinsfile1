@@ -1,8 +1,5 @@
 node("jenkins-slave")  {
     cleanWs()
-    def keyid = credentials('aws-key-id')
-    def ackey = credentials('aws-secret-key')
-
     environment {
         AWS_ACCESS_KEY_ID     = credentials('aws-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
@@ -10,8 +7,14 @@ node("jenkins-slave")  {
     stage('Upload Ansible Repo') {
         git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
     }
-    stage('Configure AWS') {
-        sh "aws configure set aws_access_key_id '$keyid' && aws configure set aws_secret_access_key '$ackey'"
+        withCredentials([string(credentialsId: 'aws-key-id', variable: 'keyid')]) {
+            sh "aws configure set aws_access_key_id '$keyid'"
+        }
+    }
+    stage('Import EC2 read cred 2') {
+        withCredentials([string(credentialsId: 'aws-secret-key', variable: 'ackey')]) {
+            sh "aws configure set aws_secret_access_key '$ackey'"
+        }
     }
     stage('Deploy Calc App') {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook1.yml', vaultCredentialsId: 'vault'
