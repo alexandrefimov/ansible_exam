@@ -7,9 +7,6 @@ node("jenkins-slave")  {
     stage('Upload Ansible Repo') {
         git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
     }
-    stage('Install Amazon Plugin') {
-        sh 'ansible-galaxy collection install amazon.aws'
-    }
     stage('Deploy Calc App') {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook1.yml', vaultCredentialsId: 'vault'
     }
