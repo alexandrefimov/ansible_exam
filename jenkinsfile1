@@ -1,5 +1,8 @@
 node("jenkins-slave")  {
     cleanWs()
+    stage('Install Galaxy Roles') {
+        sh 'ansible-galaxy install alexandrefimov.docker_role, alexandrefimov.web_role, alexandrefimov.nginx_role --force'
+    }
     stage('Upload Ansible Repo') {
         git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
     }
