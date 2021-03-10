@@ -15,9 +15,9 @@ node("jenkins-slave")  {
     }
     stage('Integration Test') {
         def instance_ip = sh (script: 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text', returnStdout: true)
-        println instance_ip
-        def test = httpRequest 'http://{$instance_ip}'
-        println("Server status: "+test.status)
+/        println instance_ip
+/        def test = httpRequest 'http://{$instance_ip}'
+/        println("Server status: "+test.status)
     }
     stage('Remove Credentials') {
         sh 'rm -rf /home/jenkins/.aws'
