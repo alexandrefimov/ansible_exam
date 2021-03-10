@@ -1,9 +1,5 @@
 node("jenkins-slave")  {
     cleanWs()
-#    environment {
-#        AWS_ACCESS_KEY_ID     = credentials('aws-key-id')
-#        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-#    }
     stage('Upload Ansible Repo') {
         git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
     }
