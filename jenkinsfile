@@ -1,6 +1,5 @@
 node("jenkins-slave")  {
     cleanWs()
-    def instance_ip
     stage('Install Galaxy Roles') {
         sh 'ansible-galaxy install alexandrefimov.docker_role, alexandrefimov.web_role, alexandrefimov.nginx_role --force'
     }
