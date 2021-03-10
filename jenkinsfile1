@@ -16,6 +16,7 @@ node("jenkins-slave")  {
     }
     stage('Get instance IP') {
         instance_ip = sh 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text'
+        echo $instance_ip
     }
     stage('Integration Test') {
         def test = httpRequest "http://'$instance_ip'"
