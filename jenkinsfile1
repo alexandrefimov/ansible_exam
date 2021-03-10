@@ -20,5 +20,8 @@ node("jenkins-slave")  {
     stage('Deploy Calc App') {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook1.yml', vaultCredentialsId: 'vault'
     }
+    stage('Remove Credentials') {
+        sh 'rm -rf /home/jenkins/.aws'
+    }
 }
 
