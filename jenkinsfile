@@ -20,11 +20,10 @@ node("jenkins-slave")  {
     stage('Deploy Calc App') {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
     }
-    stage('Get instance IP') {
-        instance_ip = sh 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text'
-    }
     stage('Integration Test') {
-        def test = httpRequest 34.241.70.162
+        def instance_ip = sh (script: 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text', returnStdout: true)
+        println instance_ip
+        def test = httpRequest url: "http://$instance_ip"
         println("Server status: "+test.status)
     }
     stage('Remove Credentials') {
