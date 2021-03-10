@@ -1,6 +1,5 @@
 node("jenkins-slave")  {
     cleanWs()
-    def instance_ip
     stage('Download Ansible Repo') {
         git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
     }
