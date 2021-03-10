@@ -1,6 +1,5 @@
 node("jenkins-slave")  {
     cleanWs()
-    def instance_ip
     stage('Install Galaxy Roles') {
         sh 'ansible-galaxy install alexandrefimov.docker_role, alexandrefimov.web_role, alexandrefimov.nginx_role --force'
     }
@@ -21,10 +20,10 @@ node("jenkins-slave")  {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook.yml', vaultCredentialsId: 'vault'
     }
     stage('Get instance IP') {
-        instance_ip = sh 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text'
+        def instance_ip = sh 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text'
     }
     stage('Integration Test') {
-        def test = httpRequest 'http://$instance_ip'
+        def test = httpRequest 'http://"$instance_ip"'
         println("Server status: "+test.status)
     }
     stage('Remove Credentials') {
