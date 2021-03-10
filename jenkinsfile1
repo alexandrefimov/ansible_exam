@@ -11,10 +11,7 @@ node("jenkins-slave")  {
         git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
     }
     stage('Configure AWS') {
-        sh """
-        aws configure set aws_access_key_id $keyid
-        aws configure set aws_secret_access_key $ackey
-        """
+        sh "aws configure set aws_access_key_id '$keyid' && aws configure set aws_secret_access_key '$ackey'"
     }
     stage('Deploy Calc App') {
         ansiblePlaybook credentialsId: 'aws-ssh-key', inventory: 'aws_ec2.yml', playbook: 'playbook1.yml', vaultCredentialsId: 'vault'
