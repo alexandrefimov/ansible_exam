@@ -22,5 +22,6 @@ node("jenkins-slave")  {
     stage('Remove Credentials') {
         sh 'rm -rf /home/jenkins/.aws'
     }
+    cleanWs()
 }
 
