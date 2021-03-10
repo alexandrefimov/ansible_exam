@@ -1,0 +1,29 @@
+node("jenkins-slave")  {
+    cleanWs()
+    def instance_ip
+    stage('Download Ansible Repo') {
+        git credentialsId: 'ssh-git-key', url: 'git@github.com:alexandrefimov/ansible_exam.git'
+    }
+    stage('AWS conf ID') {
+        withCredentials([string(credentialsId: 'aws-key-id', variable: 'keyid')]) {
+            sh 'aws configure set aws_access_key_id "$keyid"'
+        }
+    }
+    stage('AWS conf key') {
+        withCredentials([string(credentialsId: 'aws-secret-key', variable: 'ackey')]) {
+            sh 'aws configure set aws_secret_access_key "$ackey"'
+        }
+    }
+    stage('Get instance IP') {
+        instance_ip = sh 'aws ec2 describe-instances --region eu-west-1  --query "Reservations[*].Instances[*].PublicIpAddress" --output=text'
+    }
+    stage('Integration Test') {
+        def test = httpRequest 'http://"$instance_ip"'
+        println("Server status: "+test.status)
+    }
+    stage('Remove Credentials') {
+        sh 'rm -rf /home/jenkins/.aws'
+    }
+    cleanWs()
+}
+
